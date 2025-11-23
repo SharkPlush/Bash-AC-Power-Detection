@@ -13,7 +13,7 @@ logic () {
       
     LPP=$(upower -e | grep -E 'line_power') # WE FIND THE LINE_POWER PATH
     if [[ -z "$LPP" ]]; then
-      # IF THE PATH IS MISSING UPDATE WITH WARNINGS AND AC STATUS WILL BE UNDETECTABLE
+      # IF THE PATH IS MISSING RUN WITH WARNINGS AND AC STATUS WILL BE UNDETECTABLE
       echo "Can't find the line power path so AC status is undetermined, something might be wrong.."
       # ADD WHATEVER YOU NEED TO RUN HERE
       example_executable
@@ -21,7 +21,7 @@ logic () {
       
     LPS=$(upower -i "$LPP" | awk '/online:/ {print $2}') # WE FIGURE OUT THE LINE_POWER STATE
     if [[ "$LPS" == "yes" ]]; then
-      echo "Device is plugged in." # IF THE DEVICE IS PLUGGED IN WE UPDATE
+      echo "Device is plugged in." # IF THE DEVICE IS PLUGGED IN WE RUN
       # ADD WHATEVER YOU NEED TO RUN HERE
       example_executable
       
@@ -30,15 +30,16 @@ logic () {
       wait_ac
         
     else
-      # IF THE STATE ISN'T YES OR NO WE JUST UPDATE WITH WARNINGS
+      # IF THE STATE ISN'T YES OR NO WE JUST RUN WITH WARNINGS
       echo "Unexpected AC status."
       # ADD WHATEVER YOU NEED TO RUN HERE
       example_executable
       fi
     
   else
-    echo "Device isn't a mobile device." # IF THE DEVICE TYPE IS A PC WE JUST UPDATE
+    echo "Device isn't a mobile device." # IF THE DEVICE TYPE IS A PC WE JUST RUN
     # ADD WHATEVER YOU NEED TO RUN HERE
+    example_executable
   fi
 }
   
