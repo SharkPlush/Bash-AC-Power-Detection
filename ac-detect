@@ -4,8 +4,8 @@
 # Copyright 2025 SharkPlush
 # Licensed under CC BY-NC 4.0 with attribution & change-indication requirements permanently waived by the author.
 # No credit or change log required (appreciated though). Commercial use still forbidden.
-# Full license: 
-# Report any issues to  with logs.
+# Full license: https://github.com/SharkPlush/Bash-AC-Power-Detection/blob/main/LICENSE
+# Report any issues to https://github.com/SharkPlush/Bash-AC-Power-Detection/issues with logs.
 set -euo pipefail
 logic () {
   if [[ $(< /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|11|14|31|32)$ ]]; then # WE NEED TO DETECT THE DEVICE TYPE TO AVOID FALSE POSITIVES
