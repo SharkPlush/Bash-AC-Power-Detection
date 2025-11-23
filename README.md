@@ -37,7 +37,7 @@ WARNING: Before installing please check:
 upower -e
 ```
 
-If you have multiple "line_power_" outputs the script will probably not work. If you can please beta test the beta branch for this [here](https://github.com/SharkPlush/Aeon-AC-update-detection/tree/Multi-Line-Power-Beta).
+If you have multiple "line_power_" outputs the script will probably not work.
 
 To install, modify the wrapper to your needs and place it in /usr/local/bin/
 
