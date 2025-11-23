@@ -1,0 +1,57 @@
+#!/bin/bash
+# Created by SharkPlush on GitHub
+# https://github.com/SharkPlush
+# Copyright 2025 SharkPlush
+# Licensed under CC BY-NC 4.0 with attribution & change-indication requirements permanently waived by the author.
+# No credit or change log required (appreciated though). Commercial use still forbidden.
+# Full license: 
+# Report any issues to  with logs.
+set -euo pipefail
+logic () {
+  if [[ $(< /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|11|14|31|32)$ ]]; then # WE NEED TO DETECT THE DEVICE TYPE TO AVOID FALSE POSITIVES
+    echo "Detected a mobile device."
+      
+    LPP=$(upower -e | grep -E 'line_power') # WE FIND THE LINE_POWER PATH
+    if [[ -z "$LPP" ]]; then
+      # IF THE PATH IS MISSING UPDATE WITH WARNINGS AND AC STATUS WILL BE UNDETECTABLE
+      echo "Can't find the line power path so AC status is undetermined, something might be wrong.."
+      # ADD WHATEVER YOU NEED TO RUN HERE
+    fi
+      
+    LPS=$(upower -i "$LPP" | awk '/online:/ {print $2}') # WE FIGURE OUT THE LINE_POWER STATE
+    if [[ "$LPS" == "yes" ]]; then
+      echo "Device is plugged in." # IF THE DEVICE IS PLUGGED IN WE UPDATE
+      # ADD WHATEVER YOU NEED TO RUN HERE
+      
+    elif [[ "$LPS" == "no" ]]; then
+      echo "Device is unplugged waiting for AC power.." # IF THE DEVICE IS UNPLUGGED WE "wait_ac"
+      wait_ac
+        
+    else
+      # IF THE STATE ISN'T YES OR NO WE JUST UPDATE WITH WARNINGS
+      echo "Unexpected AC status."
+      # ADD WHATEVER YOU NEED TO RUN HERE
+      fi
+    
+  else
+    echo "Device isn't a mobile device." # IF THE DEVICE TYPE IS A PC WE JUST UPDATE
+    # ADD WHATEVER YOU NEED TO RUN HERE
+  fi
+}
+  
+wait_ac () {
+  LPS=$(busctl wait org.freedesktop.UPower "$LPP" org.freedesktop.DBus.Properties PropertiesChanged | grep -m1 -oE "(true|false)")
+  if [[ "$LPS" == "true" ]]; then
+    echo "Device is plugged in."
+    # ADD WHATEVER YOU NEED TO RUN HERE
+      
+  elif [[ "$LPS" == "false" ]]; then
+    echo "Device got plugged after logic determined it was unplugged but before wait_ac started." # CHANCES OF THIS HAPPENING ARE SLIM BUT NOT IMPOSSIBLE
+    wait_ac
+      
+  else
+    echo "The AC state was unexpected, something might be wrong.." 
+    # ADD WHATEVER YOU NEED TO RUN HERE
+  fi
+}
+logic
