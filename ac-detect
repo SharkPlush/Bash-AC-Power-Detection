@@ -44,10 +44,6 @@ check_ac_status () {
   elif [[ "$LPS" == "yes" ]]; then
     echo "Device is plugged in."
     example_executable # ADD WHATEVER YOU NEED TO RUN HERE
-        
-  elif [[ "$LPS" == "false" ]]; then
-    echo "Device got plugged after logic determined it was unplugged but before busctl started."
-    exit 1
 
   else
     echo "The AC state was unexpected, something might be wrong.." 
