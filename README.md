@@ -29,7 +29,7 @@ Main features:
 
  TODO:
 
- - The script cannot handle devices with multiple "line_power_" I don't know how to fix this would like some help please.
+ - Improve https://github.com/SharkPlush/Bash-AC-Power-Detection/issues/2#issuecomment-3585303129 and merge it into main
 
 WARNING: Before installing please check:
 
