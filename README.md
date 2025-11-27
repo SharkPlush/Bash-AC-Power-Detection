@@ -1,4 +1,4 @@
-NOTE: This is mostly untested, so if you are willing to test or better yet provide fixes / optimizations feel free to do so.
+NOTE: This is a fully untested beta branch.
 
 This wrapper is meant to be used in conjunction with a systemd service to wrap around certain service you don't want running while on battery power.
 
@@ -26,18 +26,6 @@ Main features:
  - PC detection.
  - No polling.
  - Multi-battery laptop support!
-
- TODO:
-
- - The script cannot handle devices with multiple "line_power_" I don't know how to fix this would like some help please.
-
-WARNING: Before installing please check:
-
-```console
-upower -e
-```
-
-If you have multiple "line_power_" outputs the script will probably not work.
 
 To install, modify the wrapper to your needs and place it in /usr/local/bin/
 

@@ -10,10 +10,10 @@ set -euo pipefail
 check_device () {
   if [[ $(< /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|11|14|31|32)$ ]]; then
     echo "Detected a mobile device." 
-    LPP=$(upower -e | grep -E 'line_power')
+    DD=$(upower -e | grep -E 'DisplayDevice')
     
-    if [[ -z "$LPP" ]]; then
-      echo "Can't find the line power path so AC status is undetermined, something might be wrong.."
+    if [[ -z "$DD" ]]; then
+      echo "Can't find the DisplayDevice path so AC status is undetermined, something might be wrong.."
       exit 1
   
     else
@@ -27,27 +27,31 @@ check_device () {
 }
     
 check_ac_status () { 
-  LPS=$(upower -i "$LPP" | awk '/online:/ {print $2}')
-  if [[ "$LPS" == "no" ]]; then
+  LPS=$(upower -i "$DD" | awk '/state:/ {print $2}')
+  if [[ "$LPS" == "discharging" ]]; then
     echo "Device is unplugged waiting for AC power.."
     # RACE CONDITION HERE IF USER PLUGS IN AT THIS EXACT TIME (see issue 1 on GH)
-    LPS=$(busctl wait org.freedesktop.UPower "$LPP" org.freedesktop.DBus.Properties PropertiesChanged | grep -m1 -oE "(true|false)")
-    if [[ "$LPS" == "true" ]]; then
+    LPS=$(grep -m1 -oE "UINT32 [0-6]" <(busctl --system monitor --match "type='signal',sender='org.freedesktop.UPower',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged',path='"$DD"',arg0='org.freedesktop.UPower.Device'"))
+    if [[ "$LPS" =~ ^UINT32\ (1|5)$ ]]; then
       echo "Device is plugged in."
       example_executable # ADD WHATEVER YOU NEED TO RUN HERE
         
-    elif [[ "$LPS" == "false" ]]; then
-      echo "A race condition happened exiting.."
+    elif [[ "$LPS" =~ ^UINT32\ (0|2)$ ]]; then
+      echo "A race condition happened or couldn't determine the charging state exiting.."
       exit 1
-    fi 
+    
+    else
+      echo "Unexpected battery state: $LPS report this to the GitHub page please! Exiting.."
+      exit 1
+    fi
       
-  elif [[ "$LPS" == "yes" ]]; then
+  elif [[ "$LPS" =~ ^(charging|pending-charge)$ ]]; then
     echo "Device is plugged in."
     example_executable # ADD WHATEVER YOU NEED TO RUN HERE
 
   else
-    echo "The AC state was unexpected, something might be wrong.." 
+    echo "The AC state was unexpected, something might be wrong or your battery is missing" 
     exit 1
   fi
 }
- check_device
+check_device
