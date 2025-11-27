@@ -37,7 +37,7 @@ WARNING: Before installing please check:
 upower -e
 ```
 
-If you have multiple "line_power_" outputs the script will probably not work.
+If you have multiple "line_power_" check this branch: https://github.com/SharkPlush/Bash-AC-Power-Detection/tree/Multi-Line-Power
 
 To install, modify the wrapper to your needs and place it in /usr/local/bin/
 
