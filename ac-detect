@@ -21,9 +21,7 @@ check_device () {
 check_ac_status () { 
   if [[ "$(systemd-ac-power -v)" == "no" ]]; then
     echo "Device is unplugged waiting for AC power.."
-    LPS="$(grep -m1 -oE "(POWER_SUPPLY_ONLINE=1|yes)" <(systemd-ac-power -v & udevadm monitor --subsystem-match=power_supply --property --kernel))"
-    
-    if [[ "$LPS" =~ ^(POWER_SUPPLY_ONLINE=1|yes)$ ]]; then
+    if [[ "$(grep -m1 -oE "(POWER_SUPPLY_ONLINE=1|yes)" <(systemd-ac-power -v & udevadm monitor --subsystem-match=power_supply -p -k))" =~ ^(POWER_SUPPLY_ONLINE=1|yes)$ ]]; then
       echo "Device is plugged in."
       example_executable # ADD WHATEVER YOU NEED TO RUN HERE
     fi 
