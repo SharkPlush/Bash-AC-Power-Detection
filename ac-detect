@@ -21,17 +21,13 @@ check_device () {
 check_ac_status () { 
   if [[ "$(systemd-ac-power -v)" == "no" ]]; then
     echo "Device is unplugged waiting for AC power.."
-    # RACE CONDITION HERE IF USER PLUGS IN AT THIS EXACT TIME (see issue 1 on GH)
-    LPS="$(grep -m1 -oE "POWER_SUPPLY_ONLINE=[01]" <(udevadm monitor --subsystem-match=power_supply --property))"
-    if [[ "$LPS" == "POWER_SUPPLY_ONLINE=1" ]]; then
+    LPS="$(grep -m1 -oE "(POWER_SUPPLY_ONLINE=1|yes)" <(systemd-ac-power -v & udevadm monitor --subsystem-match=power_supply --property --kernel))"
+    
+    if [[ "$LPS" =~ ^(POWER_SUPPLY_ONLINE=1|yes)$ ]]; then
       echo "Device is plugged in."
       example_executable # ADD WHATEVER YOU NEED TO RUN HERE
-        
-    elif [[ "$LPS" == "POWER_SUPPLY_ONLINE=0" ]]; then
-      echo "A race condition happened exiting.."
-      exit 1
-    fi
-  
+    fi 
+      
   else
     echo "Device is plugged in." 
     example_executable # ADD WHATEVER YOU NEED TO RUN HERE
