@@ -1,4 +1,4 @@
-NOTE: This is a fully untested beta branch. If you want to know the potential problems of using this branch see: https://github.com/SharkPlush/Bash-AC-Power-Detection/issues/2#issuecomment-3585303129
+NOTE: This branch is basically ready for usage but I'm not fully confident merging into main without: https://github.com/SharkPlush/Bash-AC-Power-Detection/issues/2#issuecomment-3602283311
 
 This wrapper is meant to be used in conjunction with a systemd service to wrap around certain service you don't want running while on battery power.
 
