@@ -8,17 +8,9 @@
 # Report any issues to https://github.com/SharkPlush/Bash-AC-Power-Detection/issues with logs.
 set -euo pipefail
 check_device () {
-  if [[ $(< /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|11|14|31|32)$ ]]; then
+  if [[ "$(< /sys/class/dmi/id/chassis_type)" =~ ^(8|9|10|11|14|31|32)$ ]]; then
     echo "Detected a mobile device." 
-    LPP=$(upower -e | grep -E 'line_power')
-    
-    if [[ -z "$LPP" ]]; then
-      echo "Can't find the line power path so AC status is undetermined, something might be wrong.."
-      exit 1
-  
-    else
-      check_ac_status
-    fi
+    check_ac_status
     
   else
     echo "Device isn't a mobile device."
@@ -27,27 +19,16 @@ check_device () {
 }
     
 check_ac_status () { 
-  LPS=$(upower -i "$LPP" | awk '/online:/ {print $2}')
-  if [[ "$LPS" == "no" ]]; then
+  if [[ "$(systemd-ac-power -v)" == "no" ]]; then
     echo "Device is unplugged waiting for AC power.."
-    # RACE CONDITION HERE IF USER PLUGS IN AT THIS EXACT TIME (see issue 1 on GH)
-    LPS=$(busctl wait org.freedesktop.UPower "$LPP" org.freedesktop.DBus.Properties PropertiesChanged | grep -m1 -oE "(true|false)")
-    if [[ "$LPS" == "true" ]]; then
+    if [[ "$(grep -m1 -oE "(POWER_SUPPLY_ONLINE=1|yes)" <(systemd-ac-power -v & udevadm monitor --subsystem-match=power_supply -p -k))" =~ ^(POWER_SUPPLY_ONLINE=1|yes)$ ]]; then
       echo "Device is plugged in."
       example_executable # ADD WHATEVER YOU NEED TO RUN HERE
-        
-    elif [[ "$LPS" == "false" ]]; then
-      echo "A race condition happened exiting.."
-      exit 1
     fi 
       
-  elif [[ "$LPS" == "yes" ]]; then
-    echo "Device is plugged in."
-    example_executable # ADD WHATEVER YOU NEED TO RUN HERE
-
   else
-    echo "The AC state was unexpected, something might be wrong.." 
-    exit 1
+    echo "Device is plugged in." 
+    example_executable # ADD WHATEVER YOU NEED TO RUN HERE
   fi
 }
- check_device
+check_device

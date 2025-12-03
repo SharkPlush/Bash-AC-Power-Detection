@@ -26,18 +26,7 @@ Main features:
  - PC detection.
  - No polling.
  - Multi-battery laptop support!
-
- TODO:
-
- - Improve https://github.com/SharkPlush/Bash-AC-Power-Detection/issues/2#issuecomment-3585303129 and merge it into main
-
-WARNING: Before installing please check:
-
-```console
-upower -e
-```
-
-If you have multiple "line_power_" check this branch: https://github.com/SharkPlush/Bash-AC-Power-Detection/tree/Multi-Line-Power
+ - Multi-AC adapter support.
 
 To install, modify the wrapper to your needs and place it in /usr/local/bin/
 
