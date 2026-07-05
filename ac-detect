@@ -6,7 +6,6 @@
 # No credit or change log required (appreciated though). Commercial use still forbidden.
 # Full license: https://github.com/SharkPlush/Bash-AC-Power-Detection/blob/main/LICENSE
 # Report any issues to https://github.com/SharkPlush/Bash-AC-Power-Detection/issues with logs.
-#!/bin/bash
 set -euo pipefail
 if ! systemd-ac-power; then
 	printf "Device is unplugged waiting for AC power..\n"
