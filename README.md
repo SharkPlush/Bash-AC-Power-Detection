@@ -8,10 +8,21 @@ Main features:
 
 Example usage: 
 ```
-fedora@Verde:~$ ac-detect && flatpak update
+$ ac-detect && flatpak update
 ```
 Sudo permissions are not required to run the script.
 This is a super basic example it can be combined with anything you might need.
+
+Installation:
+```
+$ curl -sL https://github.com/SharkPlush/Bash-AC-Power-Detection/raw/refs/heads/main/install.sh | sudo sh
+```
+Just run that command and it will install the script into `/usr/local/bin`
+
+Uninstallation:
+```
+$ sudo rm /usr/local/bin/ac-detect
+```
 
 As the sole copyright holder, I hereby permanently and irrevocably waive the requirements in Section 3(a)(1)(A)(i) (attribution/credit) and Section 3(a)(1)(B) (indication of modifications) of the CC BY-NC 4.0 license for this work. You are not required to credit me or list any changes, although both are appreciated. All other terms, including the NonCommercial restriction (no commercial use allowed), remain in full effect.
 
