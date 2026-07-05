@@ -1,13 +1,13 @@
 #!/bin/bash
 # Created by SharkPlush on GitHub
 # https://github.com/SharkPlush
-# Copyright 2025 SharkPlush
+# Copyright 2025-2026 SharkPlush
 # Licensed under CC BY-NC 4.0 with attribution & change-indication requirements permanently waived by the author.
 # No credit or change log required (appreciated though). Commercial use still forbidden.
 # Full license: https://github.com/SharkPlush/Bash-AC-Power-Detection/blob/main/LICENSE
 # Report any issues to https://github.com/SharkPlush/Bash-AC-Power-Detection/issues with logs.
 #!/bin/bash
-set -Eeuo pipefail
+set -euo pipefail
 if ! systemd-ac-power; then
 	printf "Device is unplugged waiting for AC power..\n"
 	{ udevadm monitor --subsystem-match=power_supply -p -k & sleep 0.01; systemd-ac-power -v || true; } | grep -m1 -qE "POWER_SUPPLY_ONLINE=1|yes"
